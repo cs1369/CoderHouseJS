@@ -1,82 +1,71 @@
 let nombre = prompt("Ingresa tu nombre:");
-let saldo = 5000;
-let pagarServicio = prompt(`Hola ${nombre} tu saldo es de $${saldo}: \n Deseas Pagar algun servicio? S/N`);
+let dinero = 5000;
+let pagarServicio = prompt(`Hola ${nombre} tu saldo es de $${dinero}: \n Deseas Pagar algun servicio? S/N`);
 let servicio;
-let luz = 3300;
-let gas = 1500;
-let agua = 2000;
-let saldoTotal = saldo;
+let saldoTotal = dinero;
 let seguirPagando = "s";
+let serviciosArray=[];
+let menuServicios ="";
+function addServicio(nombreServicio, saldo){
+    this.nombreServicio=nombreServicio;
+    this.saldo=saldo;
+}
+
 if(pagarServicio == "s" || pagarServicio=="S"){
 
     while(seguirPagando == "s"){
-        servicio = prompt(`Que servicio deseas pagar: \n 1)Luz $${luz} \n 2)Agua $${agua} \n 3)Gas $${gas} \n 4)Ninguno \n Elija un numero:`)
-        if(servicio >0 && servicio<5){
-            if(servicio != 4){
-                menu(parseInt(servicio));
-                seguirPagando = prompt("Desea seguir pagando? S/N");
-                seguirPagando.toLowerCase();
-                console.log(seguirPagando)
-            }else{
-                seguirPagando="n";
-            }
-        }else{
-            alert("El numero que ingresaste es invalido!!");
+        menuServicios="";
+        if(serviciosArray.length === 0){
+            servicio = prompt(`Servicio: \na)Agregar Servicio\nb)cancelar`);
         }
-        
+        else{
+            for(let i = 0 ; i<serviciosArray.length;i++){
+                menuServicios+=`${i})${serviciosArray[i].nombreServicio} $${serviciosArray[i].saldo} \n`;
+            }
+            servicio = prompt(`Servicio: \n ${menuServicios}a)Agregar Servicio\nb)cancelar`);
+        }
+        seguirPagando = respuesta(servicio);   
     }
-    alert("Gracias por Elegirnos");
-    
+
+    alert("Gracias por Elegirnos"); 
+
 }else{
     alert("Gracias por Elegirnos");
 }
 
+function respuesta(servicio){
+    let respuesta = "s";
+    let nombreServ;
+    let monto;
+    if(servicio=="a"){
+        nombreServ = prompt("Ingrese el nombre del nuevo servicio:");
+        monto = prompt("ingrese el monto del servicio:");
+        serviciosArray.push(new addServicio(nombreServ,monto));
+    }else if(servicio == "b"){
+        respuesta="n";
+    }else if(servicio > -1 && servicio < serviciosArray.length){
+        menu(parseInt(servicio));
+        respuesta = prompt("Desea seguir pagando? S/N");
+        respuesta.toLowerCase();
+    }else{
+        alert("La respuesta que ingresaste es invalida!!");
+    }
+
+    
+    return respuesta;
+}
+
 function menu(servicio){
     debugger
-    switch (servicio) {
-        case 1:
-            if(saldoTotal>0 && saldoTotal>luz){
-                if(luz>0){
-                    saldoTotal-=luz;
-                    luz= 0;
-                    alert(`Pagaste el servicio!!. Tu saldo es de ${saldoTotal}`);
-                }else{
-                    alert("Ya tienes pagado este servicio.");
-                }                        
-                
-            }else{
-                alert(`${nombre} no posees saldo suficiente!!`);
-            }
-            break;
-        case 2:
-            if(saldoTotal>0 && saldoTotal>agua){
-                if(agua>0){
-                    saldoTotal-=agua;
-                    agua= 0;
-                    alert(`Pagaste el servicio!!. Tu saldo es de ${saldoTotal}`);
-                }else{
-                    alert("Ya tienes pagado este servicio.");
-                }                        
-                
-            }else{
-                alert(`${nombre} no posees saldo suficiente!!`);
-            }
-            break;
-        case 3:
-            if(saldoTotal>0 && saldoTotal>gas){
-                if(gas>0){
-                    saldoTotal-=gas;
-                    gas= 0;
-                    alert(`Pagaste el servicio!!. Tu saldo es de ${saldoTotal}`);
-                }else{
-                    alert("Ya tienes pagado este servicio.");
-                }                        
-                
-            }else{
-                alert(`${nombre} no posees saldo suficiente!!`);
-            }
-            break;
-        default:
-            break;
+    if(serviciosArray[servicio].saldo > 0){
+        if(serviciosArray[servicio].saldo<=dinero){
+            dinero -= serviciosArray[servicio].saldo;
+            serviciosArray[servicio].saldo=0;
+            alert(`Pagaste el servicio te queda $${dinero} en tu cuenta`);
+        }else{
+            alert("No tienes saldo suficiente para pagar este servicio");
+        }
+    }else{
+        alert("Ya tienes pagado este servicio");
     }
 }
